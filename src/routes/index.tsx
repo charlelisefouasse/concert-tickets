@@ -27,6 +27,7 @@ function App() {
     displayPlacement: true,
     displayTime: true,
     startingHourSuffix: 'PM',
+    dateFormat: 'dd/MM/yyyy',
   })
 
   const updateField = (field: keyof TicketData, value: any) => {
@@ -116,7 +117,7 @@ function App() {
           </p>
         </div>
 
-        <div className="gap-8 flex flex-wrap items-start">
+        <div className="gap-8 flex  flex-wrap items-start">
           {/* Left Column: Form */}
 
           <div className="flex flex-col w-full max-w-md gap-4 items-center">
