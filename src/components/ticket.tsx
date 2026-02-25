@@ -14,7 +14,9 @@ export type TicketData = {
   price?: string
   ticketType?: string
   displayPlacement: boolean
+  displayTime: boolean
   startingHourSuffix?: 'AM' | 'PM' | '24h'
+  url?: string
 }
 
 type TicketProps = {
@@ -57,11 +59,17 @@ export function Ticket({ data, className, id }: TicketProps) {
         <div className="gap-[2.7mm] mt-auto flex justify-between">
           <div className="flex gap-[2mm] items-center font-bold text-[4mm] leading-[4.7mm] text-neutral-800 uppercase">
             <span className="truncate">{formattedDate}</span>
-            {formattedDate && data.city && <span>•</span>}
-            <span className="truncate">
-              {data.startingHour}{' '}
-              {data.startingHourSuffix === '24h' ? '' : data.startingHourSuffix}
-            </span>
+            {data.displayTime && (
+              <>
+                {formattedDate && data.city && <span>•</span>}
+                <span className="truncate">
+                  {data.startingHour || '--:--'}{' '}
+                  {data.startingHourSuffix === '24h'
+                    ? ''
+                    : data.startingHourSuffix}
+                </span>
+              </>
+            )}
           </div>
 
           <div className="flex gap-[2mm] items-center font-bold text-[4mm] leading-[4.7mm] text-neutral-800 uppercase">
@@ -76,7 +84,7 @@ export function Ticket({ data, className, id }: TicketProps) {
       <div className="relative w-[0.7mm] border-l-[0.7mm] border-dashed border-neutral-300 mt-[2.6mm] shrink-0 flex items-center justify-center" />
 
       {/* Stub (25%) */}
-      <div className="flex-[0.25] w-[25%] flex flex-col p-[5.4mm] bg-neutral-50 shrink-0 items-center gap-[2.7mm] text-center h-full">
+      <div className="flex-[0.25] flex flex-col p-[2mm] py-[3mm] bg-neutral-50 shrink-0 items-center gap-[2.7mm] text-center h-full">
         <div className="w-full flex flex-col justify-evenly h-full">
           {data.ticketType && (
             <p className="text-[3.4mm] leading-[4mm] font-bold uppercase tracking-wider text-neutral-600">
@@ -88,7 +96,7 @@ export function Ticket({ data, className, id }: TicketProps) {
               {data.price}
             </p>
           )}
-          <h2 className="text-[5.4mm] leading-[6.1mm] font-black uppercase text-neutral-900 text-wrap mt-[2.7mm]">
+          <h2 className="text-[5.4mm] leading-[6.1mm] font-black uppercase tracking-tighter text-neutral-900 text-wrap mt-[2.7mm]">
             {data.artist || 'ARTIST'}
           </h2>
           <p className="text-[3.4mm] leading-[4mm] text-neutral-500 uppercase font-medium mt-[0.7mm]">

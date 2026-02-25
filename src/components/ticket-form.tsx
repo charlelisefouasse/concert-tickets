@@ -1,11 +1,6 @@
-import { Calendar as CalendarIcon } from 'lucide-react'
-
-import { Calendar } from '@/components/ui/calendar'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { getConcertDetails, ConcertSearchResult } from '@/server/setlistfm'
+import { DateInput } from '@/components/ui/date-input'
+import { ConcertSearch } from './concert-search'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -19,13 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useEffect, useState } from 'react'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from '@/components/ui/input-group'
+
+import { isValid } from 'date-fns'
+import { buttonVariants } from '@/components/ui/button'
 
 interface TicketFormProps {
   ticketData: TicketData
@@ -33,35 +24,75 @@ interface TicketFormProps {
 }
 
 export function TicketForm({ ticketData, updateField }: TicketFormProps) {
-  const [timeZone, setTimeZone] = useState<string | undefined>(undefined)
+  const handleSelectConcert = async (concert: ConcertSearchResult) => {
+    updateField('artist', concert.artist)
+    updateField('venue', concert.venue)
+    updateField('city', concert.city)
 
-  useEffect(() => {
-    setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
-  }, [])
+    if (concert.url) updateField('url', concert.url)
 
-  function isValidDate(date: Date | undefined) {
-    if (!date) {
-      return false
+    if (concert.date) {
+      const newDate = new Date(concert.date)
+      if (isValid(newDate)) {
+        updateField('date', newDate)
+      }
     }
-    return !isNaN(date.getTime())
+
+    try {
+      const details = await getConcertDetails({
+        data: {
+          venueId: concert.venueId,
+          dateStr: concert.dateStr,
+          headlinerId: concert.artistId,
+        },
+      })
+      if (details) {
+        console.log(details)
+        if (details.openers && details.openers.length > 0) {
+          updateField('supportingArtists', details.openers.join(', '))
+        } else {
+          updateField('supportingArtists', '')
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
 
-  const formatDate = (date: Date) => date.toLocaleDateString()
-  const [open, setOpen] = useState(false)
-  const [date, setDate] = useState<Date | undefined>(
-    new Date(ticketData.date ?? ''),
-  )
-  const [month, setMonth] = useState<Date | undefined>(date)
-
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+    <div className="bg-white p-6 rounded-2xl shadow-sm border border-neutral-200 space-y-6">
+      <div className="mb-4">
+        <div className="mb-4 flex  gap-2 flex-col">
+          <div className="flex items-center justify-between">
+            <Label
+              htmlFor="artist"
+              className="uppercase text-xs font-bold text-neutral-500"
+            >
+              Prefill information
+            </Label>
+            {ticketData.url && (
+              <a
+                href={ticketData.url}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonVariants({ variant: 'link', size: 'xs' })}
+              >
+                View on Setlist.fm
+              </a>
+            )}
+          </div>
+          <ConcertSearch onSelect={handleSelectConcert} />
+        </div>
+      </div>
+
       <div className="space-y-2">
         <Label
           htmlFor="artist"
-          className="uppercase text-xs font-bold text-slate-500"
+          className="uppercase text-xs font-bold text-neutral-500"
         >
           Artist
         </Label>
+
         <Input
           id="artist"
           value={ticketData.artist}
@@ -73,7 +104,7 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
       <div className="space-y-2">
         <Label
           htmlFor="supporting"
-          className="uppercase text-xs font-bold text-slate-500"
+          className="uppercase text-xs font-bold text-neutral-500"
         >
           Supporting Act
         </Label>
@@ -87,76 +118,36 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
 
       <div className="flex flex-wrap gap-4">
         <div className="space-y-2">
-          <Label className="uppercase text-xs font-bold text-slate-500">
+          <Label className="uppercase text-xs font-bold text-neutral-500">
             Date
           </Label>
-          <InputGroup className="w-40">
-            <InputGroupInput
-              id="date-required"
-              value={ticketData.date ? formatDate(ticketData.date) : ''}
-              placeholder="June 01, 2025"
-              onChange={(e) => {
-                const date = new Date(e.target.value)
-                updateField('date', e.target.value)
-                if (isValidDate(date)) {
-                  setDate(date)
-                  setMonth(date)
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'ArrowDown') {
-                  e.preventDefault()
-                  setOpen(true)
-                }
-              }}
-            />
-            <InputGroupAddon align="inline-end">
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger
-                  render={
-                    <InputGroupButton
-                      id="date-picker"
-                      variant="ghost"
-                      size="icon-xs"
-                      aria-label="Select date"
-                    >
-                      <CalendarIcon />
-                      <span className="sr-only">Select date</span>
-                    </InputGroupButton>
-                  }
-                />
-                <PopoverContent
-                  className="w-auto overflow-hidden p-0"
-                  align="end"
-                  alignOffset={-8}
-                  sideOffset={10}
-                >
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    month={month}
-                    onMonthChange={setMonth}
-                    timeZone={timeZone}
-                    weekStartsOn={1}
-                    onSelect={(date) => {
-                      setDate(date)
-                      updateField('date', date ? formatDate(date) : '')
-                      setOpen(false)
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            </InputGroupAddon>
-          </InputGroup>
+          <DateInput
+            id="date-required"
+            value={ticketData.date}
+            onChange={(newDate) => {
+              updateField('date', newDate)
+            }}
+            className="w-40"
+          />
         </div>
         <div className="flex gap-2 items-end">
           <div className="space-y-2 max-w-24">
-            <Label
-              htmlFor="time"
-              className="uppercase text-xs font-bold text-slate-500"
-            >
-              Time
-            </Label>
+            <div className="flex items-center space-x-2">
+              <Label
+                htmlFor="time"
+                className="uppercase text-xs font-bold text-neutral-500"
+              >
+                Time
+              </Label>
+              <Switch
+                id="display-time"
+                checked={ticketData.displayTime}
+                onCheckedChange={(checked) =>
+                  updateField('displayTime', checked)
+                }
+              />
+            </div>
+
             <Input
               id="time"
               type="time"
@@ -188,7 +179,7 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
         <div className="space-y-2">
           <Label
             htmlFor="venue"
-            className="uppercase text-xs font-bold text-slate-500"
+            className="uppercase text-xs font-bold text-neutral-500"
           >
             Venue
           </Label>
@@ -202,7 +193,7 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
         <div className="space-y-2">
           <Label
             htmlFor="city"
-            className="uppercase text-xs font-bold text-slate-500"
+            className="uppercase text-xs font-bold text-neutral-500"
           >
             City
           </Label>
@@ -215,9 +206,9 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
         </div>
       </div>
 
-      <div className="space-y-4 pt-2 border-t border-slate-100">
+      <div className="space-y-4 pt-2 border-t border-neutral-100">
         <div className="flex items-center space-x-2">
-          <Label className="uppercase text-xs font-bold text-slate-500">
+          <Label className="uppercase text-xs font-bold text-neutral-500">
             Placement
           </Label>
           <Switch
@@ -239,13 +230,13 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="floor" id="floor" />
-                <Label htmlFor="floor" className="cursor-pointer">
+                <Label htmlFor="floor" className="">
                   Floor
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="seat" id="seat" />
-                <Label htmlFor="seat" className="cursor-pointer">
+                <Label htmlFor="seat" className="">
                   Seat
                 </Label>
               </div>
@@ -256,7 +247,7 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
                 <div className="space-y-2">
                   <Label
                     htmlFor="sec"
-                    className="uppercase text-[10px] font-bold text-slate-400"
+                    className="uppercase text-[10px] font-bold text-neutral-400"
                   >
                     Section
                   </Label>
@@ -270,7 +261,7 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
                 <div className="space-y-2">
                   <Label
                     htmlFor="row"
-                    className="uppercase text-[10px] font-bold text-slate-400"
+                    className="uppercase text-[10px] font-bold text-neutral-400"
                   >
                     Row
                   </Label>
@@ -284,7 +275,7 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
                 <div className="space-y-2">
                   <Label
                     htmlFor="seatNum"
-                    className="uppercase text-[10px] font-bold text-slate-400"
+                    className="uppercase text-[10px] font-bold text-neutral-400"
                   >
                     Seat
                   </Label>
@@ -301,11 +292,11 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+      <div className="grid grid-cols-2 gap-4 pt-2 border-t border-neutral-100">
         <div className="space-y-2">
           <Label
             htmlFor="type"
-            className="uppercase text-xs font-bold text-slate-500"
+            className="uppercase text-xs font-bold text-neutral-500"
           >
             Ticket Type
           </Label>
@@ -319,7 +310,7 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
         <div className="space-y-2">
           <Label
             htmlFor="price"
-            className="uppercase text-xs font-bold text-slate-500"
+            className="uppercase text-xs font-bold text-neutral-500"
           >
             Price
           </Label>

@@ -17,14 +17,15 @@ function App() {
     venue: 'Venue',
     city: 'City',
     supportingArtists: 'Supporting Artist',
-    startingHour: '08:00',
+    startingHour: '',
     placeType: 'floor',
     section: '',
     row: '',
     seatNumber: '',
-    price: '$45.00',
+    price: '',
     ticketType: 'General Admission',
     displayPlacement: true,
+    displayTime: true,
     startingHourSuffix: 'PM',
   })
 
@@ -104,14 +105,14 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8 lg:p-12">
+    <div className="min-h-screen bg-neutral-50 text-neutral-900 p-4 md:p-8 lg:p-12">
       <div className="max-w-[2000px] mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-black uppercase tracking-tight">
             Ticket Generator
           </h1>
-          <p className="text-slate-500 mt-1">
-            Customize your concert memory below.
+          <p className="text-neutral-500 mt-1">
+            Customize your concert ticket souvenir below.
           </p>
         </div>
 
@@ -135,7 +136,7 @@ function App() {
           <div className="flex-1 sticky top-12 space-y-8 overflow-hidden">
             <div
               ref={containerRef}
-              className="relative flex items-center justify-center p-4 md:p-8 lg:p-12 bg-slate-200/50 rounded-3xl border border-slate-200 overflow-hidden shadow-inner lg:min-h-[400px]"
+              className="relative flex items-center justify-center p-4 md:p-8 lg:p-12 bg-neutral-200/50 rounded-3xl border border-neutral-200 overflow-hidden shadow-inner lg:min-h-[400px]"
             >
               <div className="scale-[0.1] absolute">
                 <Ticket data={ticketData} id="ticket" />
