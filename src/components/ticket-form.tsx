@@ -47,7 +47,6 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
         },
       })
       if (details) {
-        console.log(details)
         if (details.openers && details.openers.length > 0) {
           updateField('supportingArtists', details.openers.join(', '))
         } else {
@@ -124,58 +123,74 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
           <DateInput
             id="date-required"
             value={ticketData.date}
+            dateFormat={ticketData.dateFormat}
             onChange={(newDate) => {
               updateField('date', newDate)
             }}
             className="w-40"
           />
         </div>
-        <div className="flex gap-2 items-end">
-          <div className="space-y-2 max-w-24">
-            <div className="flex items-center space-x-2">
-              <Label
-                htmlFor="time"
-                className="uppercase text-xs font-bold text-neutral-500"
-              >
-                Time
-              </Label>
-              <Switch
-                id="display-time"
-                checked={ticketData.displayTime}
-                onCheckedChange={(checked) =>
-                  updateField('displayTime', checked)
-                }
-              />
-            </div>
-
-            <Input
-              id="time"
-              type="time"
-              value={ticketData.startingHour}
-              onChange={(e) => updateField('startingHour', e.target.value)}
-              placeholder="08:00"
-              className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-            />
-          </div>
+        <div className="space-y-2">
+          <Label className="uppercase text-xs font-bold text-neutral-500">
+            Format
+          </Label>
           <Select
-            value={ticketData.startingHourSuffix}
-            onValueChange={(value) => updateField('startingHourSuffix', value)}
+            value={ticketData.dateFormat}
+            onValueChange={(val) => updateField('dateFormat', val)}
           >
-            <SelectTrigger className="w-18">
-              <SelectValue placeholder="PM" />
+            <SelectTrigger className="w-34">
+              <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="AM">AM</SelectItem>
-                <SelectItem value="PM">PM</SelectItem>
-                <SelectItem value="24h">24h</SelectItem>
-              </SelectGroup>
+            <SelectContent alignItemWithTrigger={false} className="p-1">
+              <SelectItem value="dd/MM/yyyy">dd/MM/yyyy</SelectItem>
+              <SelectItem value="MM/dd/yyyy">MM/dd/yyyy</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
+      <div className="flex gap-2 items-end">
+        <div className="space-y-2 max-w-24">
+          <div className="flex items-center space-x-2">
+            <Label
+              htmlFor="time"
+              className="uppercase text-xs font-bold text-neutral-500"
+            >
+              Time
+            </Label>
+            <Switch
+              id="display-time"
+              checked={ticketData.displayTime}
+              onCheckedChange={(checked) => updateField('displayTime', checked)}
+            />
+          </div>
 
-      <div className="grid grid-cols-2 gap-4">
+          <Input
+            id="time"
+            type="time"
+            value={ticketData.startingHour}
+            onChange={(e) => updateField('startingHour', e.target.value)}
+            placeholder="08:00"
+            className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+          />
+        </div>
+        <Select
+          value={ticketData.startingHourSuffix}
+          onValueChange={(value) => updateField('startingHourSuffix', value)}
+        >
+          <SelectTrigger className="w-18">
+            <SelectValue placeholder="PM" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="AM">AM</SelectItem>
+              <SelectItem value="PM">PM</SelectItem>
+              <SelectItem value="24h">24h</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-4">
         <div className="space-y-2">
           <Label
             htmlFor="venue"
@@ -292,8 +307,8 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 pt-2 border-t border-neutral-100">
-        <div className="space-y-2">
+      <div className="flex flex-col md:flex-row gap-4 pt-2 border-t border-neutral-100">
+        <div className="space-y-2 flex-1">
           <Label
             htmlFor="type"
             className="uppercase text-xs font-bold text-neutral-500"
@@ -319,6 +334,7 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
             value={ticketData.price}
             onChange={(e) => updateField('price', e.target.value)}
             placeholder="$150.00"
+            className="max-w-28"
           />
         </div>
       </div>

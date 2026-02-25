@@ -59,8 +59,6 @@ export const searchConcerts = createServerFn({
         },
       )
 
-      console.log({ response })
-
       if (!response.ok) {
         if (response.status === 404) {
           return []
@@ -70,7 +68,6 @@ export const searchConcerts = createServerFn({
 
       const json = await response.json()
 
-      console.log({ json })
       const setlists = json.setlist || []
 
       const resultsMap = new Map<string, ConcertSearchResult>()
@@ -138,11 +135,6 @@ export const getConcertDetails = createServerFn({
 
       if (setlists.length === 0) return null
 
-      console.log(data.headlinerId, setlists)
-
-      //   const headliner = setlists.find(
-      //     (setlist) => setlist.artist.mbid === data.headlinerId,
-      //   ).artist
       const openers = setlists
         .filter((setlist) => setlist.artist.mbid !== data.headlinerId)
         .map((s: any) => s.artist.name)

@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/input-group'
 import { cn } from '@/lib/utils'
 import { KeyboardEventHandler, useEffect, useState } from 'react'
-import { parse, isValid } from 'date-fns'
+import { parse, isValid, format } from 'date-fns'
 
 interface DateInputProps {
   id?: string
@@ -22,31 +22,44 @@ interface DateInputProps {
   placeholder?: string
   className?: string
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>
+  dateFormat?: string
 }
 
 export function DateInput({
   id = 'date-input',
   value,
   onChange,
-  placeholder = '31/01/2025',
+  placeholder,
   className,
   onKeyDown,
+  dateFormat = 'dd/MM/yyyy',
 }: DateInputProps) {
   const [open, setOpen] = useState(false)
   const [month, setMonth] = useState<Date | undefined>(value)
-  const [inputValue, setInputValue] = useState(
-    value?.toLocaleDateString() ?? '',
-  )
+
+  const getFormattedDate = (d: Date | undefined) => {
+    if (!d) return ''
+    try {
+      return format(d, dateFormat)
+    } catch {
+      return d.toLocaleDateString()
+    }
+  }
+
+  const [inputValue, setInputValue] = useState(getFormattedDate(value))
   const [timeZone, setTimeZone] = useState<string | undefined>(undefined)
+
+  const defaultPlaceholder =
+    dateFormat === 'MM/dd/yyyy' ? '01/31/2025' : '31/01/2025'
 
   useEffect(() => {
     if (value) {
-      setInputValue(value.toLocaleDateString())
+      setInputValue(getFormattedDate(value))
       setMonth(value)
     } else {
       setInputValue('')
     }
-  }, [value])
+  }, [value, dateFormat])
 
   useEffect(() => {
     setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
@@ -57,20 +70,25 @@ export function DateInput({
       <InputGroupInput
         id={id}
         value={inputValue}
-        placeholder={placeholder}
+        placeholder={placeholder || defaultPlaceholder}
         onChange={(e) => {
           const inputValue = e.target.value
           setInputValue(inputValue)
-          const parsedDate = parse(inputValue, 'dd/MM/yyyy', new Date())
 
-          console.log({ inputValue, parsedDate })
+          try {
+            const parsedDate = parse(inputValue, dateFormat, new Date())
 
-          if (isValid(parsedDate) && inputValue.length >= 10) {
-            console.log('change')
-            setMonth(parsedDate)
-            onChange?.(parsedDate)
-          } else if (inputValue === '') {
-            onChange?.(undefined)
+            if (
+              isValid(parsedDate) &&
+              inputValue.length === dateFormat.length
+            ) {
+              setMonth(parsedDate)
+              onChange?.(parsedDate)
+            } else if (inputValue === '') {
+              onChange?.(undefined)
+            }
+          } catch (err) {
+            // handle parse err silently
           }
         }}
         onKeyDown={(e) => {
@@ -112,7 +130,7 @@ export function DateInput({
               onSelect={(selectedDate) => {
                 onChange?.(selectedDate)
                 if (selectedDate) {
-                  setInputValue(selectedDate.toLocaleDateString())
+                  setInputValue(getFormattedDate(selectedDate))
                 } else {
                   setInputValue('')
                 }

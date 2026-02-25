@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { format } from 'date-fns'
 
 export type TicketData = {
   artist: string
@@ -17,6 +18,7 @@ export type TicketData = {
   displayTime: boolean
   startingHourSuffix?: 'AM' | 'PM' | '24h'
   url?: string
+  dateFormat: string
 }
 
 type TicketProps = {
@@ -27,7 +29,7 @@ type TicketProps = {
 
 export function Ticket({ data, className, id }: TicketProps) {
   const formattedDate = data.date
-    ? new Date(data.date).toLocaleDateString()
+    ? format(new Date(data.date), data.dateFormat || 'dd/MM/yyyy')
     : 'DATE TBD'
 
   const isSeat = data.placeType === 'seat'
