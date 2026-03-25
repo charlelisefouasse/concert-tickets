@@ -83,7 +83,7 @@ export function getPatternStyle(
         backgroundImage: `repeating-linear-gradient(45deg, ${color} 25%, transparent 25%, transparent 75%, ${color} 75%, ${color}), repeating-linear-gradient(45deg, ${color} 25%, transparent 25%, transparent 75%, ${color} 75%, ${color})`,
         backgroundPosition: `0 0, ${s / 2}mm ${s / 2}mm`,
         backgroundSize: `${s}mm ${s}mm`,
-        opacity: 0.02,
+        opacity: 0.03,
       }
       break
     }
