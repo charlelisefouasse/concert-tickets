@@ -1,6 +1,7 @@
 import { getConcertDetails, ConcertSearchResult } from '@/server/setlistfm'
 import { DateInput } from '@/components/ui/date-input'
 import { ConcertSearch } from './concert-search'
+import { ColorSelector } from './color-selector'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -337,6 +338,13 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
             className="max-w-28"
           />
         </div>
+      </div>
+
+      <div className="md:hidden pt-4 border-t border-neutral-100">
+        <ColorSelector
+          value={ticketData.themeColor || '#171717'}
+          onChange={(val) => updateField('themeColor', val)}
+        />
       </div>
     </div>
   )

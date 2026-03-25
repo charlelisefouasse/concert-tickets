@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import * as React from 'react'
 import { Ticket, TicketData } from '@/components/ticket'
 import { TicketForm } from '@/components/ticket-form'
+import { ColorSelector } from '@/components/color-selector'
 import { Button } from '@/components/ui/button'
 import { Download } from 'lucide-react'
 
@@ -28,6 +29,7 @@ function App() {
     displayTime: true,
     startingHourSuffix: 'PM',
     dateFormat: 'dd/MM/yyyy',
+    themeColor: '#171717',
   })
 
   const updateField = (field: keyof TicketData, value: any) => {
@@ -152,6 +154,14 @@ function App() {
               >
                 <Ticket data={ticketData} />
               </div>
+            </div>
+
+            <div className="hidden md:block">
+              <ColorSelector
+                value={ticketData.themeColor || '#171717'}
+                onChange={(val) => updateField('themeColor', val)}
+                className="px-4 py-3"
+              />
             </div>
           </div>
         </div>

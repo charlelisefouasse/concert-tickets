@@ -19,6 +19,7 @@ export type TicketData = {
   startingHourSuffix?: 'AM' | 'PM' | '24h'
   url?: string
   dateFormat: string
+  themeColor?: string
 }
 
 type TicketProps = {
@@ -37,18 +38,31 @@ export function Ticket({ data, className, id }: TicketProps) {
   return (
     <div
       className={cn(
-        'relative flex w-[200mm] h-[56.6mm] overflow-hidden rounded-xl bg-white shadow-2xl text-neutral-900  shrink-0',
+        'relative flex w-[200mm] h-[56.6mm] overflow-hidden rounded-xl bg-white shadow-2xl shrink-0 text-(--theme-color)',
         className,
       )}
+      style={
+        {
+          '--theme-color': data.themeColor || '#171717',
+        } as React.CSSProperties
+      }
       id={id}
     >
       {/* Background embellishments */}
-      <div className="absolute top-0 left-0 w-full h-[2.7mm] bg-neutral-900" />
+      <div
+        className={cn(
+          'absolute top-0 left-0 w-full h-[2.7mm] bg-(--theme-color)',
+        )}
+      />
 
       {/* Main Body (75%) */}
       <div className="flex-[0.75] w-[75%] flex flex-col justify-between p-[5.4mm] shrink-0 min-w-0">
         <div className="flex flex-col gap-[4mm] w-full items-center h-full justify-center text-center">
-          <h1 className="text-[11mm] leading-[11mm] font-black uppercase tracking-tighter text-wrap text-neutral-900">
+          <h1
+            className={cn(
+              'text-[11mm] leading-[11mm] font-black uppercase tracking-tighter text-wrap text-(--theme-color)',
+            )}
+          >
             {data.artist || 'ARTIST NAME'}
           </h1>
           {data.supportingArtists && (
@@ -74,7 +88,7 @@ export function Ticket({ data, className, id }: TicketProps) {
             )}
           </div>
 
-          <div className="flex gap-[2mm] items-center font-bold text-[4mm] leading-[4.7mm] text-neutral-800 uppercase">
+          <div className="flex gap-[2mm] items-center font-bold text-[4mm] leading-[4.7mm] text-neutral-600 uppercase">
             <span className="truncate">{data.venue}</span>
             {data.venue && data.city && <span>•</span>}
             <span className="truncate">{data.city}</span>
@@ -83,10 +97,10 @@ export function Ticket({ data, className, id }: TicketProps) {
       </div>
 
       {/* Dashed Separator */}
-      <div className="relative w-[0.7mm] border-l-[0.7mm] border-dashed border-neutral-300 mt-[2.6mm] shrink-0 flex items-center justify-center" />
+      <div className="relative w-[0.7mm] border-l-[0.7mm] border-dashed border-(--theme-color)/25 mt-[2.6mm] shrink-0 flex items-center justify-center" />
 
       {/* Stub (25%) */}
-      <div className="flex-[0.25] flex flex-col p-[2mm] py-[3mm] bg-neutral-50 shrink-0 items-center gap-[2.7mm] text-center h-full">
+      <div className="z-5 flex-[0.25] flex flex-col p-[2mm] py-[3mm] bg-(--theme-color)/2 shrink-0 items-center gap-[2.7mm] text-center h-full">
         <div className="w-full flex flex-col justify-evenly h-full">
           {data.ticketType && (
             <p className="text-[3.4mm] leading-[4mm] font-bold uppercase tracking-wider text-neutral-600">
@@ -94,14 +108,18 @@ export function Ticket({ data, className, id }: TicketProps) {
             </p>
           )}
           {data.price && (
-            <p className="text-[4mm] leading-[4.7mm] font-black mt-[1.3mm]">
+            <p className="text-[4mm] leading-[4.7mm] font-black">
               {data.price}
             </p>
           )}
-          <h2 className="text-[5.4mm] leading-[6.1mm] font-black uppercase tracking-tighter text-neutral-900 text-wrap mt-[2.7mm]">
+          <h2
+            className={cn(
+              'text-[5.4mm] leading-[6.1mm] font-black uppercase tracking-tighter text-wrap text-(--theme-color)',
+            )}
+          >
             {data.artist || 'ARTIST'}
           </h2>
-          <p className="text-[3.4mm] leading-[4mm] text-neutral-500 uppercase font-medium mt-[0.7mm]">
+          <p className="text-[3.4mm] leading-[4mm] text-neutral-500 uppercase font-medium">
             {formattedDate}
           </p>
         </div>
@@ -116,7 +134,11 @@ export function Ticket({ data, className, id }: TicketProps) {
                     <p className="text-[2.7mm] leading-[3.4mm] text-neutral-500 uppercase font-bold mb-[0.7mm]">
                       Place
                     </p>
-                    <p className="font-black text-[4.7mm] leading-[5.4mm] tracking-widest uppercase text-neutral-900">
+                    <p
+                      className={cn(
+                        'font-black text-[4.7mm] leading-[5.4mm] tracking-widest uppercase text-(--theme-color)',
+                      )}
+                    >
                       Seated
                     </p>
                   </div>
@@ -161,7 +183,11 @@ export function Ticket({ data, className, id }: TicketProps) {
                   <p className="text-[2.7mm] leading-[3.4mm] text-neutral-500 uppercase font-bold mb-[0.7mm]">
                     Place
                   </p>
-                  <p className="font-black text-[4.7mm] leading-[5.4mm] tracking-widest uppercase text-neutral-900">
+                  <p
+                    className={cn(
+                      'font-black text-[4.7mm] leading-[5.4mm] tracking-widest uppercase text-(--theme-color)',
+                    )}
+                  >
                     Floor
                   </p>
                 </div>
