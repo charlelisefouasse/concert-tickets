@@ -110,8 +110,8 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900 p-4 md:p-8 lg:p-12">
-      <div className="max-w-[2000px] mx-auto space-y-8">
+    <div className="min-h-screen bg-neutral-50 text-neutral-900 p-4 md:p-8 md:py-6 min-[1920px]:p-12">
+      <div className="max-w-[2000px] mx-auto space-y-5">
         <div>
           <h1 className="text-3xl font-black uppercase tracking-tight">
             Ticket Generator
