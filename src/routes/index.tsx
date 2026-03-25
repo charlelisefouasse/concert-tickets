@@ -144,7 +144,7 @@ function App() {
               className="relative flex items-center justify-center p-4 md:p-8 lg:p-12 bg-neutral-200/50 rounded-3xl border border-neutral-200 overflow-hidden shadow-inner lg:min-h-[400px]"
             >
               <div className="scale-[0.1] absolute">
-                <Ticket data={ticketData} id="ticket" />
+                <Ticket data={ticketData} id="ticket" withCutline />
               </div>
               <div
                 style={{

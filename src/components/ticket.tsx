@@ -28,9 +28,10 @@ type TicketProps = {
   data: TicketData
   className?: string
   id?: string
+  withCutline?: boolean
 }
 
-export function Ticket({ data, className, id }: TicketProps) {
+export function Ticket({ data, className, id, withCutline }: TicketProps) {
   const formattedDate = data.date
     ? format(new Date(data.date), data.dateFormat || 'dd/MM/yyyy')
     : 'DATE TBD'
@@ -40,7 +41,11 @@ export function Ticket({ data, className, id }: TicketProps) {
   return (
     <div
       className={cn(
-        'relative flex w-[200mm] h-[56.6mm] overflow-hidden rounded-xl bg-white shadow-2xl shrink-0 text-(--theme-color)',
+        'relative flex w-[200mm] h-[56.6mm] overflow-hidden rounded-xl bg-white shrink-0 text-(--theme-color)',
+        {
+          'border-[0.1mm] border-dashed border-neutral-400': withCutline,
+          'shadow-2xl': !withCutline,
+        },
         className,
       )}
       style={
