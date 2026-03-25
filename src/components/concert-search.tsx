@@ -200,7 +200,7 @@ export function ConcertSearch({ onSelect }: ConcertSearchProps) {
               className="w-full md:w-auto"
             >
               <SearchIcon />
-              Search a concert
+              Find my concert
             </Button>
           }
         />
@@ -223,7 +223,7 @@ export function ConcertSearch({ onSelect }: ConcertSearchProps) {
           className="w-full md:w-auto"
         >
           <SearchIcon />
-          Search a concert
+          Find my concert
         </Button>
       </DrawerTrigger>
       <DrawerContent>
