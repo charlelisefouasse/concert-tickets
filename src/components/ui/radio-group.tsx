@@ -46,4 +46,23 @@ function ColorRadioItem({ className, ...props }: RadioPrimitive.Root.Props) {
   )
 }
 
-export { RadioGroup, RadioGroupItem, ColorRadioItem }
+function PatternRadioItem({
+  className,
+  children,
+  ...props
+}: RadioPrimitive.Root.Props) {
+  return (
+    <RadioPrimitive.Root
+      data-slot="pattern-radio-item"
+      className={cn(
+        'flex size-10 rounded-md border border-neutral-200 outline-none ring-offset-2 ring-offset-white transition-all data-checked:ring-2 disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden relative',
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </RadioPrimitive.Root>
+  )
+}
+
+export { RadioGroup, RadioGroupItem, ColorRadioItem, PatternRadioItem }

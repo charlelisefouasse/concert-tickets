@@ -3,6 +3,7 @@ import * as React from 'react'
 import { Ticket, TicketData } from '@/components/ticket'
 import { TicketForm } from '@/components/ticket-form'
 import { ColorSelector } from '@/components/color-selector'
+import { PatternSelector, PatternType } from '@/components/pattern-selector'
 import { Button } from '@/components/ui/button'
 import { Download } from 'lucide-react'
 
@@ -30,6 +31,7 @@ function App() {
     startingHourSuffix: 'PM',
     dateFormat: 'dd/MM/yyyy',
     themeColor: '#171717',
+    pattern: 'none',
   })
 
   const updateField = (field: keyof TicketData, value: any) => {
@@ -156,10 +158,17 @@ function App() {
               </div>
             </div>
 
-            <div className="hidden md:block">
+            <div className="hidden md:flex gap-6">
               <ColorSelector
                 value={ticketData.themeColor || '#171717'}
                 onChange={(val) => updateField('themeColor', val)}
+                className="px-4 py-3"
+              />
+
+              <PatternSelector
+                value={(ticketData.pattern || 'none') as PatternType}
+                onChange={(val) => updateField('pattern', val)}
+                themeColor={ticketData.themeColor || '#171717'}
                 className="px-4 py-3"
               />
             </div>

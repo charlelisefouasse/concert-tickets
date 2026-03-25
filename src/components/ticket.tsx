@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
+import { getPatternStyle, PatternType } from './pattern-selector'
 
 export type TicketData = {
   artist: string
@@ -20,6 +21,7 @@ export type TicketData = {
   url?: string
   dateFormat: string
   themeColor?: string
+  pattern?: PatternType
 }
 
 type TicketProps = {
@@ -51,13 +53,24 @@ export function Ticket({ data, className, id }: TicketProps) {
       {/* Background embellishments */}
       <div
         className={cn(
-          'absolute top-0 left-0 w-full h-[2.7mm] bg-(--theme-color)',
+          'z-10 absolute top-0 left-0 w-full h-[2.7mm] bg-(--theme-color)',
         )}
       />
 
       {/* Main Body (75%) */}
-      <div className="flex-[0.75] w-[75%] flex flex-col justify-between p-[5.4mm] shrink-0 min-w-0">
-        <div className="flex flex-col gap-[4mm] w-full items-center h-full justify-center text-center">
+      <div className="relative overflow-hidden flex-[0.75] w-[75%] flex flex-col justify-between p-[5.4mm] shrink-0 min-w-0">
+        {/* Pattern overlay */}
+        {data.pattern && data.pattern !== 'none' && (
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={getPatternStyle(
+              data.pattern,
+              data.themeColor || '#171717',
+              false,
+            )}
+          />
+        )}
+        <div className="relative z-10 flex flex-col gap-[4mm] w-full items-center h-full justify-center text-center">
           <h1
             className={cn(
               'text-[11mm] leading-[11mm] font-black uppercase tracking-tighter text-wrap text-(--theme-color)',
@@ -72,8 +85,8 @@ export function Ticket({ data, className, id }: TicketProps) {
           )}
         </div>
 
-        <div className="gap-[2.7mm] mt-auto flex justify-between">
-          <div className="flex gap-[2mm] items-center font-bold text-[4mm] leading-[4.7mm] text-neutral-800 uppercase">
+        <div className="relative z-10 gap-[2.7mm] mt-auto flex justify-between">
+          <div className="flex gap-[2mm] items-center font-bold text-[4mm] leading-[4.7mm] text-neutral-600 uppercase">
             <span className="truncate">{formattedDate}</span>
             {data.displayTime && (
               <>

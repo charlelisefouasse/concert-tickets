@@ -2,6 +2,7 @@ import { getConcertDetails, ConcertSearchResult } from '@/server/setlistfm'
 import { DateInput } from '@/components/ui/date-input'
 import { ConcertSearch } from './concert-search'
 import { ColorSelector } from './color-selector'
+import { PatternSelector, PatternType } from './pattern-selector'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -340,10 +341,15 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
         </div>
       </div>
 
-      <div className="md:hidden pt-4 border-t border-neutral-100">
+      <div className="md:hidden pt-4 border-t border-neutral-100 flex flex-col gap-6">
         <ColorSelector
           value={ticketData.themeColor || '#171717'}
           onChange={(val) => updateField('themeColor', val)}
+        />
+        <PatternSelector
+          value={(ticketData.pattern || 'none') as PatternType}
+          onChange={(val) => updateField('pattern', val)}
+          themeColor={ticketData.themeColor || '#171717'}
         />
       </div>
     </div>
