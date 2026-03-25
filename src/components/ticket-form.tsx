@@ -341,7 +341,7 @@ export function TicketForm({ ticketData, updateField }: TicketFormProps) {
         </div>
       </div>
 
-      <div className="md:hidden pt-4 border-t border-neutral-100 flex flex-col gap-6">
+      <div className="lg:hidden pt-4 border-t border-neutral-100 flex flex-col gap-6">
         <ColorSelector
           value={ticketData.themeColor || '#171717'}
           onChange={(val) => updateField('themeColor', val)}

@@ -84,8 +84,13 @@ function App() {
   React.useEffect(() => {
     const updateScale = () => {
       if (!containerRef.current) return
-      // We want some padding, so let's take the container width minus 64px (padding)
-      const containerWidth = containerRef.current.clientWidth - 64
+
+      const style = window.getComputedStyle(containerRef.current)
+      const paddingX =
+        parseFloat(style.paddingLeft) + parseFloat(style.paddingRight)
+
+      // We want the inner width available for the ticket
+      const containerWidth = containerRef.current.clientWidth - paddingX
       // 148.5mm is roughly 561px (at 96 DPI). But CSS mm is an absolute unit.
       // We can create a hidden div measuring 148.5mm to get its exact pixel width,
       // or we can use the known CSS ratio: 1mm = 3.779527559px
@@ -121,7 +126,7 @@ function App() {
           </p>
         </div>
 
-        <div className="gap-8 flex  flex-wrap items-start">
+        <div className="gap-8 flex flex-wrap items-start">
           {/* Left Column: Form */}
 
           <div className="flex flex-col w-full max-w-md gap-4 items-center">
@@ -138,7 +143,7 @@ function App() {
           </div>
 
           {/* Right Column: Live Preview */}
-          <div className="flex-1 sticky top-12 space-y-8 overflow-hidden">
+          <div className="flex-1 sticky top-12 space-y-8 overflow-hidden min-w-[300px]">
             <div
               ref={containerRef}
               className="relative flex items-center justify-center p-4 md:p-8 lg:p-12 bg-neutral-200/50 rounded-3xl border border-neutral-200 overflow-hidden shadow-inner lg:min-h-[400px]"
@@ -158,7 +163,7 @@ function App() {
               </div>
             </div>
 
-            <div className="hidden md:flex gap-6">
+            <div className="hidden lg:flex gap-6">
               <ColorSelector
                 value={ticketData.themeColor || '#171717'}
                 onChange={(val) => updateField('themeColor', val)}
