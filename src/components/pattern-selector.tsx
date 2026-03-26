@@ -29,12 +29,13 @@ export function getPatternStyle(
   const stripeSpacing = 4 * scale
   const gridLine = 0.2 * scale
   const gridSpacing = 5 * scale
-  const baseOpacity = 0.05
+  const baseOpacity = 0.06 * scale
 
   let style: React.CSSProperties = {}
 
   switch (pattern) {
     case 'honeycomb': {
+      const scale = isPreview ? 0.7 : 1
       const p21 = 5.25 * scale
       const p30 = 7.5 * scale
       const p19 = 4.75 * scale
@@ -50,12 +51,13 @@ export function getPatternStyle(
       break
     }
     case 'dots': {
+      const scale = isPreview ? 0.6 : 1
       const s = 8.2 * scale
       const r = 0.4 * scale
       style = {
         backgroundImage: `radial-gradient(${color} ${r}mm, transparent ${r}mm)`,
         backgroundSize: `${s}mm ${s}mm`,
-        opacity: baseOpacity,
+        opacity: 0.1,
       }
       break
     }
@@ -86,6 +88,7 @@ export function getPatternStyle(
       break
 
     case 'waves': {
+      const scale = isPreview ? 0.5 : 1
       const w = 3.2 * scale
       style = {
         backgroundImage: `repeating-radial-gradient(circle at 0 0, transparent 0, #ffffff ${w}mm), repeating-linear-gradient(${color}55, ${color})`,
@@ -94,16 +97,18 @@ export function getPatternStyle(
       break
     }
     case 'checkerboard': {
+      const scale = isPreview ? 0.5 : 1
       const s = 8 * scale
       style = {
         backgroundImage: `repeating-linear-gradient(45deg, ${color} 25%, transparent 25%, transparent 75%, ${color} 75%, ${color}), repeating-linear-gradient(45deg, ${color} 25%, transparent 25%, transparent 75%, ${color} 75%, ${color})`,
         backgroundPosition: `0 0, ${s / 2}mm ${s / 2}mm`,
         backgroundSize: `${s}mm ${s}mm`,
-        opacity: 0.03,
+        opacity: 0.05,
       }
       break
     }
     case 'circular': {
+      const scale = isPreview ? 0.5 : 1
       const c1 = 1.8 * scale
       const c2 = 3.5 * scale
       style = {

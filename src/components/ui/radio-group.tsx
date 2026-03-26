@@ -38,7 +38,7 @@ function ColorRadioItem({ className, ...props }: RadioPrimitive.Root.Props) {
     <RadioPrimitive.Root
       data-slot="color-radio-item"
       className={cn(
-        'flex size-6 rounded-full outline-none ring-offset-2 ring-offset-white transition-all data-checked:ring-2 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex size-8 rounded-full outline-none ring-offset-2 ring-offset-white transition-all data-checked:ring-2 disabled:cursor-not-allowed disabled:opacity-50 hover:cursor-pointer',
         className,
       )}
       {...props}
@@ -55,7 +55,7 @@ function PatternRadioItem({
     <RadioPrimitive.Root
       data-slot="pattern-radio-item"
       className={cn(
-        'flex size-10 rounded-md border border-neutral-200 outline-none ring-offset-2 ring-offset-white transition-all data-checked:ring-2 disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden relative',
+        'flex size-8 rounded-full border border-neutral-200 outline-none ring-offset-2 ring-offset-white transition-all data-checked:ring-2 disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden relative hover:cursor-pointer',
         className,
       )}
       {...props}

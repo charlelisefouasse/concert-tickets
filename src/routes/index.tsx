@@ -149,7 +149,11 @@ function App() {
               className="relative flex items-center justify-center p-4 md:p-8 lg:p-12 bg-neutral-200/50 rounded-3xl border border-neutral-200 overflow-hidden shadow-inner lg:min-h-[400px]"
             >
               <div className="scale-[0.1] absolute">
-                <Ticket data={ticketData} id="ticket" withCutline />
+                <Ticket
+                  data={ticketData}
+                  id="ticket"
+                  className="border-[0.1mm] border-dashed border-neutral-400"
+                />
               </div>
               <div
                 style={{
@@ -159,7 +163,7 @@ function App() {
                   transition: 'transform 0.1s ease-out',
                 }}
               >
-                <Ticket data={ticketData} />
+                <Ticket data={ticketData} className="shadow-2xl" />
               </div>
             </div>
 
