@@ -60,7 +60,11 @@ function App() {
       const currentWidthPx = node.offsetWidth
       const customRatio = targetPixels / currentWidthPx
 
-      const dataUrl = await toPng(node, { pixelRatio: customRatio })
+      const dataUrl = await toPng(node, {
+        pixelRatio: customRatio,
+        fontEmbedCSS:
+          "@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/jetbrains-mono/index.css')",
+      })
 
       const processedUrl = await addDpiMetadata({
         data: { imageUri: dataUrl, dpi: targetDpi },
